@@ -134,7 +134,7 @@ def get_character_gacha_icon(name:str,star=3) -> Image :
     name = character_name_translate(name)
 
     character_icon = get_character_icon(name,star=star)
-    back = character_back_icon[str(star)]
+    back = character_back_icon[str(star)].copy()
     character_icon = icon_zoom(character_icon, (130, 140))
     back.paste(character_icon, (21, 48), character_icon)
 
@@ -148,7 +148,7 @@ def get_arm_gacha_icon(name:str,star=3,exclusive=False) -> Image :
     name = item_name_translate(name)
 
     arm_icon = get_item_icon(name)
-    back = arm_star_icon[str(star)]
+    back = arm_star_icon[str(star)].copy()
     character_icon = icon_zoom(arm_icon, (90, 90))
     back.paste(character_icon, (42, 68), character_icon)
 

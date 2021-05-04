@@ -106,7 +106,6 @@ class Gacha(object):
         # 这里会直接返回抽卡结果的图片
         self.gacha_count["1_star"] += 1
         name = random.choice(POOL[self.pool]["1_star"])
-        print(name)
         return get_character_gacha_icon(name,star=1)
 
 
@@ -115,7 +114,6 @@ class Gacha(object):
         # 随机一个2星角色或武器
         self.gacha_count["2_star"] += 1
         name = random.choice(POOL[self.pool]["2_star"])
-        print(name)
 
         if self.pool == "character":
             return get_character_gacha_icon(name,star=2)
@@ -142,7 +140,6 @@ class Gacha(object):
                 name = random.choice(POOL[self.pool]["3_star_not_UP"])
         else:
             name = random.choice(POOL[self.pool]["all_3_star"])
-        print(name)
         return get_character_gacha_icon(name,star=3)
 
 
@@ -151,7 +148,6 @@ class Gacha(object):
         # 随机一个4星装备
         self.gacha_count["4_star"] += 1
         name = random.choice(POOL[self.pool]["4_star"])
-        print(name)
         return get_arm_gacha_icon(name,star=4)
 
 
@@ -160,7 +156,6 @@ class Gacha(object):
         # 随机一个5星装备，5星装备不包括专武
         self.gacha_count["5_star"] += 1
         name = random.choice(POOL[self.pool]["5_star"])
-        print(name)
         return get_arm_gacha_icon(name,star=5)
 
 
