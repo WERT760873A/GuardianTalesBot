@@ -270,7 +270,7 @@ class Gacha(object):
 
     def gacha_10(self):
         # 10连
-        for self.current_times in range(10):
+        for self.current_times in range(100):
             self.current_times  += 1
 
             if self.pool == "arms":
