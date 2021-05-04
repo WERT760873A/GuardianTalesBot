@@ -6,7 +6,7 @@ from nonebot.typing import T_State
 from nonebot.adapters import Bot, Event
 
 
-GuardianTalesGacha_10 = on_command("坎游抽卡",aliases={"坎游十连","十连"} ,rule=to_me(), priority=1)
+GuardianTalesGacha_10 = on_command("坎游抽卡",aliases={"坎游十连","十连"})
 
 
 @GuardianTalesGacha_10.handle()
