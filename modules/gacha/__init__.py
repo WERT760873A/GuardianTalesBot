@@ -5,7 +5,7 @@ from nonebot.adapters.cqhttp import Event, Bot,Message
 
 
 
-GuardianTalesGacha_10 = on_command("坎游抽卡",aliases={"坎游十连","十连"})
+GuardianTalesGacha_10 = on_command("坎游抽卡",aliases={"坎游十连"})
 
 
 @GuardianTalesGacha_10.handle()
