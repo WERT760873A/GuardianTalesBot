@@ -7,6 +7,7 @@ from PIL import Image
 import os
 import json
 import random
+import math
 
 
 FILE_PATH = os.path.dirname(__file__)
@@ -241,7 +242,7 @@ class Gacha(object):
 
         size = self.gacha_list[0].size
         w = int(size[0] * 5)
-        h = int(size[1] * (len(self.gacha_list) // 5 + 1))
+        h = int(size[1] * math.ceil(len(self.gacha_list) / 5))
         back = Image.new("RGBA",( w, h))
         for i in range(len(self.gacha_list)):
             im = self.gacha_list[i]
@@ -281,6 +282,8 @@ class Gacha(object):
             self.gacha_list.append(im)
 
         splice_im = self.gacha_list_splice()
+        size = splice_im.size
+        splice_im = splice_im.resize((int(size[0]/2),int(size[1]/2)))
         mes = image_to_CQ_code(splice_im)
         mes += "\n"
         mes += self.get_gacha_count()
