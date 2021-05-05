@@ -4,10 +4,10 @@ from nonebot import on_command
 from nonebot.adapters.cqhttp import Event, Bot,Message
 
 
-GuardianTalesGacha1 = on_command("坎游抽卡",aliases={"坎游单抽"})
-GuardianTalesGacha10 = on_command("坎游抽卡",aliases={"坎游十连"})
-GuardianTalesGacha100 = on_command("坎游抽卡",aliases={"坎游百连"})
-GuardianTalesGacha300 = on_command("坎游抽卡",aliases={"坎游三百连"})
+GuardianTalesGacha1 = on_command("坎游单抽")
+GuardianTalesGacha10 = on_command("坎游十连")
+GuardianTalesGacha100 = on_command("坎游百连")
+GuardianTalesGacha300 = on_command("坎游三百连")
 
 
 @GuardianTalesGacha1.handle()
