@@ -12,7 +12,8 @@ GuardianTalesGacha = on_command("坎游抽卡",aliases={"坎游单抽","坎游�
 @GuardianTalesGacha.handle()
 async def _(bot: Bot, event: Event):
     ev = event.get_message()
-    print(ev)
+    print(f"event : {event}")
+    print(f"ev:{ev}")
     mes = Gacha().gacha_10()
     await GuardianTalesGacha.finish(message=Message(mes))
 
