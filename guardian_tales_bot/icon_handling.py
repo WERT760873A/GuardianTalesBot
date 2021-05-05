@@ -128,12 +128,10 @@ def image_to_CQ_code(im:Image) ->str :
 
 
 
-def get_character_gacha_icon(name:str,star=3) -> Image :
+def get_character_gacha_icon(en_name:str,star=3) -> Image :
     # 返回角色的抽卡结果图
 
-    name = character_name_translate(name)
-
-    character_icon = get_character_icon(name,star=star)
+    character_icon = get_character_icon(en_name,star=star)
     back = character_back_icon[str(star)].copy()
     character_icon = icon_zoom(character_icon, (130, 140))
     back.paste(character_icon, (21, 48), character_icon)
@@ -142,12 +140,10 @@ def get_character_gacha_icon(name:str,star=3) -> Image :
 
 
 
-def get_arm_gacha_icon(name:str,star=3,exclusive=False) -> Image :
+def get_arm_gacha_icon(en_name:str,star=3,exclusive=False) -> Image :
     # 返回装备抽卡结果图
 
-    name = item_name_translate(name)
-
-    arm_icon = get_item_icon(name)
+    arm_icon = get_item_icon(en_name)
     back = arm_star_icon[str(star)].copy()
     character_icon = icon_zoom(arm_icon, (90, 90))
     back.paste(character_icon, (42, 68), character_icon)

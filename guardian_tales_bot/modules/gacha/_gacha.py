@@ -1,8 +1,8 @@
 
 # 抽卡模块
 
-from ..zh_cn_translate import character_name_translate,item_name_translate
-from ..icon_handling import get_character_icon,get_item_icon,image_to_CQ_code,get_character_gacha_icon,get_arm_gacha_icon
+from guardian_tales_bot.zh_cn_translate import character_name_translate,item_name_translate
+from guardian_tales_bot.icon_handling import get_character_icon,get_item_icon,image_to_CQ_code,get_character_gacha_icon,get_arm_gacha_icon
 from PIL import Image
 import os
 import json
@@ -105,20 +105,23 @@ class Gacha(object):
         # 随机一个1星的角色
         # 这里会直接返回抽卡结果的图片
         self.gacha_count["1_star"] += 1
-        name = random.choice(POOL[self.pool]["1_star"])
-        return get_character_gacha_icon(name,star=1)
+        cn_name = random.choice(POOL[self.pool]["1_star"])
+        en_name = character_name_translate(cn_name)
+        return get_character_gacha_icon(en_name,star=1)
 
 
 
     def get_2_star(self):
         # 随机一个2星角色或武器
         self.gacha_count["2_star"] += 1
-        name = random.choice(POOL[self.pool]["2_star"])
+        cn_name = random.choice(POOL[self.pool]["2_star"])
 
         if self.pool == "character":
-            return get_character_gacha_icon(name,star=2)
+            en_name = character_name_translate(cn_name)
+            return get_character_gacha_icon(en_name,star=2)
         else:
-            return get_arm_gacha_icon(name,star=2)
+            en_name = item_name_translate(cn_name)
+            return get_arm_gacha_icon(en_name,star=2)
 
 
 
@@ -129,34 +132,38 @@ class Gacha(object):
 
         # 这是武器池的情况
         if self.pool == "arms":
-            name = random.choice(POOL[self.pool]["3_star"])
-            return get_arm_gacha_icon(name,star=3)
+            cn_name = random.choice(POOL[self.pool]["3_star"])
+            en_name = item_name_translate(cn_name)
+            return get_arm_gacha_icon(en_name,star=3)
 
         # 下边是角色池
         if self.up:
             if random.random() > 0.5:
-                name = random.choice(POOL[self.pool]["3_star_UP"])
+                cn_name = random.choice(POOL[self.pool]["3_star_UP"])
             else:
-                name = random.choice(POOL[self.pool]["3_star_not_UP"])
+                cn_name = random.choice(POOL[self.pool]["3_star_not_UP"])
         else:
-            name = random.choice(POOL[self.pool]["all_3_star"])
-        return get_character_gacha_icon(name,star=3)
+            cn_name = random.choice(POOL[self.pool]["all_3_star"])
+        en_name = character_name_translate(cn_name)
+        return get_character_gacha_icon(en_name,star=3)
 
 
 
     def get_4_star(self):
         # 随机一个4星装备
         self.gacha_count["4_star"] += 1
-        name = random.choice(POOL[self.pool]["4_star"])
-        return get_arm_gacha_icon(name,star=4)
+        cn_name = random.choice(POOL[self.pool]["4_star"])
+        en_name = item_name_translate(cn_name)
+        return get_arm_gacha_icon(en_name,star=4)
 
 
 
     def get_5_star(self):
         # 随机一个5星装备，5星装备不包括专武
         self.gacha_count["5_star"] += 1
-        name = random.choice(POOL[self.pool]["5_star"])
-        return get_arm_gacha_icon(name,star=5)
+        cn_name = random.choice(POOL[self.pool]["5_star"])
+        en_name = item_name_translate(cn_name)
+        return get_arm_gacha_icon(en_name,star=5)
 
 
 
@@ -166,13 +173,14 @@ class Gacha(object):
 
         if self.up:
             if random.random() > 0.5:
-                name = random.choice(POOL[self.pool]["5_star_exclusive_UP"])
+                cn_name = random.choice(POOL[self.pool]["5_star_exclusive_UP"])
             else:
-                name = random.choice(POOL[self.pool]["all_exclusive_not_UP"])
+                cn_name = random.choice(POOL[self.pool]["all_exclusive_not_UP"])
         else:
-            name = random.choice(POOL[self.pool]["all_exclusive"])
+            cn_name = random.choice(POOL[self.pool]["all_exclusive"])
 
-        return get_arm_gacha_icon(name,star=5,exclusive=True)
+        en_name = item_name_translate(cn_name)
+        return get_arm_gacha_icon(en_name,star=5,exclusive=True)
 
 
 
@@ -268,9 +276,9 @@ class Gacha(object):
         return mes
 
 
-    def gacha_10(self):
-        # 10连
-        for self.current_times in range(100):
+    def gacha_10(self,frequency=10):
+        # 多次抽卡
+        for self.current_times in range(frequency):
             self.current_times  += 1
 
             if self.pool == "arms":

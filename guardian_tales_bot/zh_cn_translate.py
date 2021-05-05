@@ -30,22 +30,22 @@ load_name_json()
 
 
 
-def character_name_translate(name:str) ->str :
+def character_name_translate(cn_name:str) ->str :
     # 根据角色中文名查找英文名称，遍历CHARACTERS_NAME来查找,找不到抛出异常
 
     for en_name in CHARACTERS_NAME.keys():
-        if name in CHARACTERS_NAME[en_name]:
+        if cn_name in CHARACTERS_NAME[en_name]:
             return en_name
 
-    raise IndexError(f"找不到 {name} 对应的英文名称，请检查是否中文输入错误或者characters_name.json文件有没有你输入的名字")
+    raise IndexError(f"找不到 {cn_name} 对应的英文名称，请检查是否中文输入错误或者characters_name.json文件有没有你输入的名字")
 
 
-def item_name_translate(name:str) ->str :
+def item_name_translate(cn_name:str) ->str :
     # 根据物品中文名查找英文名称，在ITEMS_NAME查找,找不到抛出异常
-    if name in ITEMS_NAME :
-        return ITEMS_NAME[name]
+    if cn_name in ITEMS_NAME :
+        return ITEMS_NAME[cn_name]
 
-    raise IndexError(f"找不到 {name} 对应的英文名称，请检查是否中文输入错误或者items_name.json文件有没有你输入的名字")
+    raise IndexError(f"找不到 {cn_name} 对应的英文名称，请检查是否中文输入错误或者items_name.json文件有没有你输入的名字")
 
 
 
