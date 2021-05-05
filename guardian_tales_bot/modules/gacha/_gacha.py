@@ -96,18 +96,31 @@ class Gacha(object):
         # 需要生成图片的抽卡结果列表
         self.gacha_list = []
 
-        # 保底计数,注意这个计数是从0开始的，每一次抽卡（包括第一次）之前都得+1
-        self.distance_4_star = 0
+        # 角色4星和武器2星的十连保底计数,注意这个计数是从0开始的，每一次抽卡（包括第一次）之前都得+1
+        self.character_4_star_must = 0
+        self.arm_2_star_must = 0
+
+        # 设置 self.gacha_list 是否保留 1星的抽卡结果，防止抽卡次数过多最后拼接的图太大，以下几个参数类似
+        self.keep_1_star_im = True
+        self.keep_2_star_im = True
+        self.keep_3_star_im = True
+        self.keep_4_star_im = True
+        self.keep_5_star_im = True
+        self.keep_exclusive_im = True
 
 
 
     def get_1_star(self) -> Image:
         # 随机一个1星的角色
-        # 这里会直接返回抽卡结果的图片
+        # 这里会直接把抽卡结果的图片放到 self.gacha_list 然后返回图片
         self.gacha_count["1_star"] += 1
         cn_name = random.choice(POOL[self.pool]["1_star"])
         en_name = character_name_translate(cn_name)
-        return get_character_gacha_icon(en_name,star=1)
+        im = get_character_gacha_icon(en_name,star=1)
+
+        if self.keep_1_star_im:
+            self.gacha_list.append(im)
+        return im
 
 
 
@@ -118,10 +131,16 @@ class Gacha(object):
 
         if self.pool == "character":
             en_name = character_name_translate(cn_name)
-            return get_character_gacha_icon(en_name,star=2)
+            im = get_character_gacha_icon(en_name,star=2)
+
         else:
             en_name = item_name_translate(cn_name)
-            return get_arm_gacha_icon(en_name,star=2)
+            im = get_arm_gacha_icon(en_name,star=2)
+
+        if self.keep_2_star_im:
+            self.gacha_list.append(im)
+
+        return im
 
 
 
@@ -134,7 +153,11 @@ class Gacha(object):
         if self.pool == "arms":
             cn_name = random.choice(POOL[self.pool]["3_star"])
             en_name = item_name_translate(cn_name)
-            return get_arm_gacha_icon(en_name,star=3)
+            im = get_arm_gacha_icon(en_name,star=3)
+
+            if self.keep_3_star_im:
+                self.gacha_list.append(im)
+            return im
 
         # 下边是角色池
         if self.up:
@@ -145,7 +168,12 @@ class Gacha(object):
         else:
             cn_name = random.choice(POOL[self.pool]["all_3_star"])
         en_name = character_name_translate(cn_name)
-        return get_character_gacha_icon(en_name,star=3)
+        im = get_character_gacha_icon(en_name,star=3)
+
+        if self.keep_3_star_im:
+            self.gacha_list.append(im)
+
+        return im
 
 
 
@@ -154,7 +182,12 @@ class Gacha(object):
         self.gacha_count["4_star"] += 1
         cn_name = random.choice(POOL[self.pool]["4_star"])
         en_name = item_name_translate(cn_name)
-        return get_arm_gacha_icon(en_name,star=4)
+        im = get_arm_gacha_icon(en_name,star=4)
+
+        if self.keep_4_star_im:
+            self.gacha_list.append(im)
+
+        return im
 
 
 
@@ -163,7 +196,12 @@ class Gacha(object):
         self.gacha_count["5_star"] += 1
         cn_name = random.choice(POOL[self.pool]["5_star"])
         en_name = item_name_translate(cn_name)
-        return get_arm_gacha_icon(en_name,star=5)
+        im = get_arm_gacha_icon(en_name,star=5)
+
+        if self.keep_5_star_im:
+            self.gacha_list.append(im)
+
+        return im
 
 
 
@@ -180,20 +218,27 @@ class Gacha(object):
             cn_name = random.choice(POOL[self.pool]["all_exclusive"])
 
         en_name = item_name_translate(cn_name)
-        return get_arm_gacha_icon(en_name,star=5,exclusive=True)
+        im = get_arm_gacha_icon(en_name,star=5,exclusive=True)
+
+        if self.keep_exclusive_im:
+            self.gacha_list.append(im)
+
+        return im
 
 
 
     def gacha_one_character(self):
         # 抽一次角色
         r = random.random()
+        self.character_4_star_must += 1
 
         probability = 0.0275
         if r < probability:
             return self.get_3_star()
 
         probability += 0.19
-        if (r < probability) or (self.current_times % 10 == 0):
+        if (r < probability) or (self.character_4_star_must % 10 == 0):
+            self.character_4_star_must = 0
             return self.get_2_star()
 
         return self.get_1_star()
@@ -203,6 +248,7 @@ class Gacha(object):
     def gacha_one_arm(self):
         # 抽一次武器
         r = random.random()
+        self.arm_2_star_must += 1
 
         probability = 0.03
         if r < probability:
@@ -213,7 +259,8 @@ class Gacha(object):
             return self.get_5_star()
 
         probability += 0.09
-        if (r < probability) or (self.current_times % 10 == 0):
+        if (r < probability) or (self.arm_2_star_must % 10 == 0):
+            self.arm_2_star_must = 0
             return self.get_4_star()
 
         probability += 0.27
@@ -243,6 +290,24 @@ class Gacha(object):
         return txt
 
 
+    def set_keep_im(self,frequency):
+        # 设置不同星级的抽卡结果是否保留在 self.gacha_list
+
+        if self.pool == "arms":
+            # 这是武器池设置
+            if frequency:
+                if frequency >= 50:
+                    self.keep_2_star_im = False
+                if frequency >= 100:
+                    self.keep_3_star_im = False
+
+        else:
+            # 这是角色池设置
+            if frequency >= 50:
+                self.keep_1_star_im = False
+            if frequency >= 300:
+                self.keep_2_star_im = False
+
 
     def gacha_list_splice(self):
         # 对 self.gacha_list 里的图片进行拼接，返回完整大图
@@ -266,10 +331,13 @@ class Gacha(object):
         #单抽
 
         if self.pool == "arms":
-            im = self.gacha_one_arm()
+            self.gacha_one_arm()
         else:
-            im = self.gacha_one_character()
+            self.gacha_one_character()
 
+        im = self.gacha_list[0]
+        size = im.size
+        im = im.resize((int(size[0] / 3), int(size[1] / 3)))
         mes = image_to_CQ_code(im)
         mes += "\n"
         mes += self.get_gacha_count()
@@ -278,19 +346,19 @@ class Gacha(object):
 
     def gacha_10(self,frequency=10):
         # 多次抽卡
+        self.set_keep_im(frequency)
+
         for self.current_times in range(frequency):
             self.current_times  += 1
 
             if self.pool == "arms":
-                im = self.gacha_one_arm()
+                self.gacha_one_arm()
             else:
-                im = self.gacha_one_character()
-
-            self.gacha_list.append(im)
+                self.gacha_one_character()
 
         splice_im = self.gacha_list_splice()
         size = splice_im.size
-        splice_im = splice_im.resize((int(size[0]/2),int(size[1]/2)))
+        splice_im = splice_im.resize((int(size[0]/3),int(size[1]/3)))
         mes = image_to_CQ_code(splice_im)
         mes += "\n"
         mes += self.get_gacha_count()
