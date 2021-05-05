@@ -7,7 +7,7 @@ driver = nonebot.get_driver()
 driver.register_adapter("cqhttp", CQHTTPBot)
 nonebot.load_builtin_plugins()
 
-nonebot.load_plugins("guardian_tales_bot\modules")
+nonebot.load_plugin("guardian_tales_bot.modules.gacha")
 
 if __name__ == "__main__":
     nonebot.run()
